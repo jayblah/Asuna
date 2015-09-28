@@ -44,9 +44,14 @@ namespace VayneHunter_Reborn.Utility
         {
             return target.Buffs.Any(bu => bu.Name == "vaynesilvereddebuff" && bu.Count == 2);
         }
+
+        public static BuffInstance GetWBuff(this Obj_AI_Hero target)
+        {
+            return target.Buffs.FirstOrDefault(bu => bu.Name == "vaynesilvereddebuff");
+        }
+
         public static bool IsPlayerFaded()
         {
-            return false;
             return (ObjectManager.Player.HasBuff("vaynetumblefade") && !ObjectManager.Player.UnderTurret(true));
         }
         public static void MoveToLimited(Vector3 where)

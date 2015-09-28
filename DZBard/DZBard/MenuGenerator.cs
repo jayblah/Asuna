@@ -21,11 +21,24 @@ namespace DZBard
             {
                 comboMenu.AddItem(new MenuItem("dz191.bard.combo.useq", "Use Q").SetValue(true));
                 comboMenu.AddItem(new MenuItem("dz191.bard.combo.usew", "Use W").SetValue(true));
+                comboMenu.AddItem(new MenuItem("dz191.bard.combo.qks", "Use Q KS").SetValue(true));
+
                 rootMenu.AddSubMenu(comboMenu);
             }
 
             var harassMenu = new Menu("Harass", "dz191.bard.mixed");
             {
+                var QMenu = new Menu("Q Targets (Harass Only)", "dz191.bard.mixed");
+                {
+                    foreach (var hero in HeroManager.Enemies)
+                    {
+                        QMenu.AddItem(
+                            new MenuItem(string.Format("dz191.bard.qtarget.{0}", hero.ChampionName.ToLower()),
+                                hero.ChampionName).SetValue(true));
+                        
+                    }
+                    harassMenu.AddSubMenu(QMenu);
+                }
                 harassMenu.AddItem(new MenuItem("dz191.bard.mixed.useq", "Use Q").SetValue(true));
                 rootMenu.AddSubMenu(harassMenu);
             }
@@ -58,6 +71,9 @@ namespace DZBard
                 miscMenu.AddItem(new MenuItem("dz191.bard.misc.sep1", "                     Q - Cosmic Binding          "));
                 miscMenu.AddItem(new MenuItem("dz191.bard.misc.distance", "Calculation distance").SetValue(new Slider(250, 100, 450)));
                 miscMenu.AddItem(new MenuItem("dz191.bard.misc.accuracy", "Accuracy").SetValue(new Slider(20, 1, 50)));
+                miscMenu.AddItem(new MenuItem("dz191.bard.misc.sep2", ""));
+                miscMenu.AddItem(new MenuItem("dz191.bard.misc.attackMinions", "Don't attack Minions aka Support Mode").SetValue(true));
+                miscMenu.AddItem(new MenuItem("dz191.bard.misc.attackMinionsRange", "Allies in range to not attack Minions").SetValue(new Slider(1200, 700, 2000)));
                 rootMenu.AddSubMenu(miscMenu);
             }
 

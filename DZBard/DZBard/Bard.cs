@@ -43,6 +43,20 @@ namespace DZBard
             Game.OnUpdate += Game_OnUpdate;
             GameObject.OnCreate += OnCreate;
             GameObject.OnDelete += OnDelete;
+            Orbwalking.BeforeAttack += OnBeforeAttack;
+        }
+
+        private static void OnBeforeAttack(Orbwalking.BeforeAttackEventArgs args)
+        {
+            if (args.Target.Type == GameObjectType.obj_AI_Minion
+                && (BardOrbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed)
+                && GetItemValue<bool>("dz191.bard.misc.attackMinions"))
+            {
+                if (ObjectManager.Player.CountAlliesInRange(GetItemValue<Slider>("dz191.bard.misc.attackMinionRange").Value) > 0)
+                {
+                    args.Process = false;
+                }
+            }
         }
 
         private static void OnDelete(GameObject sender, EventArgs args)
@@ -89,7 +103,7 @@ namespace DZBard
                     break;
                 case Orbwalking.OrbwalkingMode.Mixed:
                     if (spells[SpellSlot.Q].IsReady() && GetItemValue<bool>(string.Format("dz191.bard.{0}.useq", BardOrbwalker.ActiveMode.ToString().ToLower())) &&
-                        ComboTarget.IsValidTarget())
+                        ComboTarget.IsValidTarget() && GetItemValue<bool>(string.Format("dz191.bard.qtarget.{0}", ComboTarget.ChampionName.ToLower())))
                     {
                         HandleQ(ComboTarget);
                     }
@@ -157,7 +171,7 @@ namespace DZBard
                 
                 if (QPrediction.Hitchance >= HitChance.High)
                 {
-                    if (spells[SpellSlot.Q].GetDamage(comboTarget) > comboTarget.Health + 15)
+                    if (spells[SpellSlot.Q].GetDamage(comboTarget) > comboTarget.Health + 15 && GetItemValue<bool>("dz191.bard.combo.qks"))
                     {
                         spells[SpellSlot.Q].Cast(QPrediction.CastPosition);
                         return;
